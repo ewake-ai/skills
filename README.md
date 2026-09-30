@@ -12,7 +12,12 @@ npx skills add ewake-ai/skills
 
 The command installs the skills into the repository for the coding agents that you select. Commit the files so that your team gets them.
 
-Then ask your coding agent, for example "Connect Ewake", "Report our deployments to Ewake", or "Check the Ewake setup".
+Then ask your coding agent, for example:
+
+- "Connect Ewake"
+- "Report our deployments to Ewake"
+- "Teach Ewake about this repository"
+- "Check the Ewake setup"
 
 For Cursor, the connect skill uses `jq` to add the servers. If `jq` is not installed, the skill gives you the entries to add by hand.
 
@@ -22,6 +27,7 @@ For Cursor, the connect skill uses `jq` to add the servers. If `jq` is not insta
 |---|---|
 | `ewake-connect` | Connects the coding agent to Ewake and to the Ewake documentation. Start here. |
 | `ewake-report-deployments` | Adds the deployment report step to the CI pipeline and opens a pull request. |
+| `ewake-teach` | Maps the services of the repository to `.ewake/repo-metadata.yml` and opens a pull request. |
 | `ewake-check-setup` | Reports what Ewake knows about the repository and what is missing. Changes nothing. |
 
 ## Safety

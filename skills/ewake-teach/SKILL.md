@@ -71,7 +71,7 @@ Check if a tool with a name that ends with `ewake_list_service_names` is availab
 If an Ewake tool returns an authorization error, recommend the skill `ewake-connect` to the user. Then go to step 4.
 
 1. Get the repository name from the command `git remote get-url origin`.
-2. Call `ewake_list_service_names` with `search` set to each telemetry name.
+2. For each telemetry name, call `ewake_list_service_names` with `search` set to the longest word of the name. The words are the parts between `-`, `_`, and `.`, for example `checkout` in `checkout-api`.
 3. Call `ewake_load_cypher_skill` one time. It gives the graph schema and example queries.
 4. Use `ewake_run_cypher_query` to find:
    - the services that Ewake links to this repository

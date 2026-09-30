@@ -1,0 +1,30 @@
+{
+  "name": "ewake",
+  "displayName": "Ewake",
+  "description": "Connects Claude Code to Ewake, an AI agent for software reliability, and to the Ewake documentation. Adds skills that report deployments, map the services of a repository, and check the Ewake setup.",
+  "author": {
+    "name": "Ewake",
+    "url": "https://www.ewake.ai"
+  },
+  "homepage": "https://www.ewake.ai",
+  "repository": "https://github.com/ewake-ai/skills",
+  "userConfig": {
+    "ewake_mcp_address": {
+      "type": "string",
+      "title": "Ewake MCP address",
+      "description": "Enter your Ewake dashboard address plus /mcp. The address must start with https://. Example: https://your-company.ewake.ai/mcp",
+      "required": true,
+      "sensitive": false
+    }
+  },
+  "mcpServers": {
+    "ewake": {
+      "type": "http",
+      "url": "${user_config.ewake_mcp_address}"
+    },
+    "ewake-docs": {
+      "type": "http",
+      "url": "https://docs.ewake.ai/mcp"
+    }
+  }
+}

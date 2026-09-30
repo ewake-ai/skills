@@ -23,7 +23,7 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
 
 ## Steps
 
-1. If a tool with a name that ends with `ewake_list_service_names` is available, go to step 7.
+1. If a tool with a name that ends with `ewake_list_service_names` is available, go to step 8.
 2. If this session has no browser, do not add a server. Do not ask for an API key. This is the case for a cloud agent, for example Claude Code on the web, a Cursor background agent, or the Copilot coding agent. If you are not sure, ask the user. Tell the user to add the connection one time in the settings of the agent:
    - **Claude Code**: add a connector on claude.ai, then sign in.
    - **Cursor**: add the server in the MCP settings of the team, then sign in.
@@ -31,15 +31,36 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
    - **Codex cloud**: this is not possible today.
 
    Give the user this link for the details and the limits: `https://github.com/ewake-ai/skills#cloud-agents`. Then stop.
-3. Ask the user for the address of their Ewake dashboard, for example `https://your-company.ewake.ai`. The address must start with `https://`. Remove a `/` at the end. The MCP address is the dashboard address plus `/mcp`.
-4. Tell the user to sign in to the Ewake dashboard in the browser. Then tell the user what the approval page shows:
+3. If the agent is not Claude Code, go to step 4. Check if the Ewake plugin added the **ewake** server:
+
+   ```bash
+   claude mcp get plugin:ewake:ewake >/dev/null 2>&1
+   ```
+
+   If the exit code is 0, the plugin has the two servers and the MCP address. Do not ask for the address. Do not add a server. Do these steps:
+
+   1. Do step 5. Do not do step 6.
+   2. Run `claude mcp login plugin:ewake:ewake`. The command waits until the user clicks **Approve**. Give it a timeout of 5 minutes or more. If the command does not work, tell the user to run `/mcp`, select **plugin:ewake:ewake**, and sign in.
+   3. Go to step 7.
+
+   If the exit code is not 0, check if the plugin has no MCP address. This command exits with 0 if the plugin has the **ewake-docs** server and no server has the name **ewake**:
+
+   ```bash
+   claude mcp get plugin:ewake:ewake-docs >/dev/null 2>&1 && ! claude mcp get ewake >/dev/null 2>&1
+   ```
+
+   If this exit code is 0, the plugin has no MCP address. Do not ask for the address. Do not add a server. Tell the user to run `/plugin configure ewake@ewake`, or `/plugin configure ewake@synced` if the user added the plugin from claude.ai. Tell the user to enter the MCP address and start a new session. Then stop.
+
+   If this exit code is not 0, go to step 4.
+4. Ask the user for the address of their Ewake dashboard, for example `https://your-company.ewake.ai`. The address must start with `https://`. Remove a `/` at the end. The MCP address is the dashboard address plus `/mcp`.
+5. Tell the user to sign in to the Ewake dashboard in the browser. Then tell the user what the approval page shows:
    - the name of the coding agent
    - the access "Read your service map, ownership, incident history, deployments and integrations". An older Ewake shows "Read your service map, ownership and incident history".
    - the return address
    - the buttons **Approve** and **Cancel**
 
    The user clicks **Approve**.
-5. Add the two servers and start the sign-in. Use the method for the agent in use.
+6. Add the two servers and start the sign-in. Use the method for the agent in use.
 
    A server can already exist from an earlier sign-in. Check each server with one of these commands. Use only the exit code: 0 means that the server exists. If the server exists, do not add it again.
 
@@ -94,9 +115,9 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
 
    **Other agents.** Do not open the MCP configuration of the agent. Give the user the two addresses. Tell the user to add each one as a remote MCP server with the streamable HTTP transport, if it is not there already.
 
-6. Wait until the user tells you that the sign-in is complete.
-7. Call `ewake_list_service_names`. If the tool is not available, tell the user to start a new agent session. In Claude Code, the user can also run `/mcp` and reconnect ewake. Then do this step again.
-8. Report the result to the user:
+7. Wait until the user tells you that the sign-in is complete.
+8. Call `ewake_list_service_names`. If the tool is not available, tell the user to start a new agent session. In Claude Code, the user can also run `/mcp` and reconnect **ewake**, or **plugin:ewake:ewake** if the plugin is installed. Then do this step again.
+9. Report the result to the user:
    - **The tool returns service names.** The connection works. Show the names. If the result has `truncated`, tell the user that Ewake has more services.
    - **The tool returns no names.** The connection works, but Ewake has no services. Tell the user why. Ewake makes a service from one of these sources:
      - an observability integration, for example Datadog, Grafana, Loki, or Thanos

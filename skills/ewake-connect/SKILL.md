@@ -34,7 +34,7 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
 3. Ask the user for the address of their Ewake dashboard, for example `https://your-company.ewake.ai`. The address must start with `https://`. Remove a `/` at the end. The MCP address is the dashboard address plus `/mcp`.
 4. Tell the user to sign in to the Ewake dashboard in the browser. Then tell the user what the approval page shows:
    - the name of the coding agent
-   - the access "Read your service map, ownership and incident history"
+   - the access "Read your service map, ownership, incident history, deployments and integrations". An older Ewake shows "Read your service map, ownership and incident history".
    - the return address
    - the buttons **Approve** and **Cancel**
 
@@ -99,9 +99,21 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
 8. Report the result to the user:
    - **The tool returns service names.** The connection works. Show the names. If the result has `truncated`, tell the user that Ewake has more services.
    - **The tool returns no names.** The connection works, but Ewake has no services. Tell the user why. Ewake makes a service from one of these sources:
-     - an observability integration, for example Datadog, Grafana, Loki, or Prometheus
+     - an observability integration, for example Datadog, Grafana, Loki, or Thanos
      - a Backstage `catalog-info.yaml` file
      - a deployment event of the last 14 days
 
-     A repository alone does not make a service. Tell the user to connect an integration in the Ewake dashboard, or to run the skill `ewake-report-deployments`.
+     A repository alone does not make a service.
+
+     If a tool with a name that ends with `ewake_list_integrations` is available, call it. Use only these parts of the result:
+     - **Source integration**: an integration with `type` `github`, `gitlab`, `datadog`, `grafana`, `loki`, `thanos`, or `clickhouse`.
+     - **Graph run**: a run with `lambda` set to `knowledge-graph` in the `hydrationRuns` of a source integration. Use it only if the `createdAt` of its integration is in the last 24 hours. Only the knowledge-graph runs write the services.
+
+     Tell the user each reason that applies, with its next step:
+     - **No integration**: there is no source integration. Tell the user to connect an integration in the Ewake dashboard, or to run the skill `ewake-report-deployments`.
+     - **Paused**: there are source integrations, but each has `active` false. Tell the user to resume a source integration in the Ewake dashboard.
+     - **In progress**: a graph run is pending or running, and the tool does not say that it has probably stopped. Tell the user to use this skill again after the run ends.
+     - **Found nothing**: a graph run succeeded, but its summary shows that it found nothing. Tell the user which integration found nothing. Then give the next step of **No integration**.
+
+     Without the tool, or if no reason applies, tell the user to connect an integration in the Ewake dashboard. The user can also run the skill `ewake-report-deployments`.
    - **The tool returns an authorization error.** Tell the user to sign in again. A sign-in stops 30 days after the approval.

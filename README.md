@@ -2,6 +2,8 @@
 
 Skills that help a coding agent set up and use [Ewake](https://www.ewake.ai).
 
+The guide is in the Ewake documentation: [Setup skills for coding agents](https://docs.ewake.ai/interfaces/setup-skills).
+
 > **Preview.** These skills are in preview. They can change without notice.
 
 ## Install

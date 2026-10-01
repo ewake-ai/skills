@@ -29,7 +29,14 @@ Full reference: `https://docs.ewake.ai/integrations/deployment/deployment-tracki
    - GitHub Actions: the report step, or its separate job, has `continue-on-error: true`.
    - Other CI systems: the report command ends with `|| true`.
 
-   If the report runs before the deployment step, move it after the deployment step, in the same job. Add a missing `continue-on-error: true` or `|| true`. Change nothing else. If you change nothing, tell the user and stop. If you change an item, go to step 6.
+   If the report runs before the deployment step, move it after the deployment step, in the same job. Add a missing `continue-on-error: true` or `|| true`. Change nothing else. If you change an item, go to step 6.
+
+   If you change nothing and a tool with a name that ends with `ewake_list_deployments` is available, do these steps:
+   - Call the tool. Set `repository` to the owner and the name of the repository, for example `my-org/my-service`. Set `from` to the time 14 days ago and `to` to the time now.
+   - If the tool gives a deployment, find the newest deployment. Tell the user its time, its artifact name, and its commit.
+   - If the tool gives no deployment, tell the user that Ewake received no deployment in the last 14 days. Ask the user if the pipeline deployed to production in that time. If it did, read the troubleshooting section of the full reference. Then help the user.
+
+   If you change nothing, tell the user. Then stop.
 4. If the repository deploys more than one service, each service gets its own report step.
 
 ### 2. Get the artifact name
@@ -114,3 +121,5 @@ report-deployment:
 After the next production deployment, the deployment shows on the **Releases** page of the Ewake dashboard.
 
 If it does not show, read the troubleshooting section of the full reference. Then help the user.
+
+If a tool with a name that ends with `ewake_list_deployments` is available, the user can also run the skill `ewake-check-setup` after the deployment. It checks that Ewake received the deployment.

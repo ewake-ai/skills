@@ -1,0 +1,13 @@
+{
+  "name": "ewake",
+  "owner": {
+    "name": "Ewake"
+  },
+  "description": "The Ewake plugin for Claude Code.",
+  "plugins": [
+    {
+      "name": "ewake",
+      "source": "./"
+    }
+  ]
+}

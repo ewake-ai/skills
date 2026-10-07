@@ -7,9 +7,10 @@
     "name": "Ewake",
     "url": "https://www.ewake.ai"
   },
-  "homepage": "https://docs.ewake.ai/interfaces/setup-skills",
+  "homepage": "https://www.ewake.ai",
   "repository": "https://github.com/ewake-ai/skills",
   "privacyPolicy": "https://www.ewake.ai/privacy-policy/",
+  "termsOfServiceUrl": "https://www.ewake.ai/terms-of-service/",
   "userConfig": {
     "ewake_mcp_address": {
       "type": "string",

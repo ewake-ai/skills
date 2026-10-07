@@ -91,6 +91,11 @@ claude mcp add --transport http --scope user ewake <MCP address>
 claude mcp add --transport http --scope user ewake-docs https://docs.ewake.ai/mcp
 claude mcp login ewake
 
+# Claude Code and Codex: if the sign-in reports that the address of the ewake server is not valid,
+# remove the server, then add it again.
+claude mcp remove ewake --scope user
+codex mcp remove ewake
+
 # Claude Code with the plugin: add no server. Only open the sign-in page.
 claude mcp login plugin:ewake:ewake
 

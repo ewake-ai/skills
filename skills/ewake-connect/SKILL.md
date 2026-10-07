@@ -40,7 +40,7 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
    If the exit code is 0, the plugin has the two servers and the MCP address. Do not ask for the address. Do not add a server. Do these steps:
 
    1. Do step 5. Do not do step 6.
-   2. Run `claude mcp login plugin:ewake:ewake`. The command waits until the user clicks **Approve**. Give it a timeout of 5 minutes or more. If the command does not work, tell the user to run `/mcp`, select **plugin:ewake:ewake**, and sign in.
+   2. Run `claude mcp login plugin:ewake:ewake`. The command waits until the user clicks **Approve**. Give it a timeout of 5 minutes or more. If the command reports that the URL is not valid, the MCP address of the plugin is wrong. Tell the user to run `/plugin configure ewake@ewake`, or `/plugin configure ewake@synced` if the user added the plugin from claude.ai. Tell the user to enter the MCP address with `https://` at the start and to start a new session. Then stop. If the command does not work for a different reason, tell the user to run `/mcp`, select **plugin:ewake:ewake**, and sign in.
    3. Go to step 7.
 
    If the exit code is not 0, check if the plugin has no MCP address. This command exits with 0 if the plugin has the **ewake-docs** server and no server has the name **ewake**:
@@ -52,7 +52,7 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
    If this exit code is 0, the plugin has no MCP address. Do not ask for the address. Do not add a server. Tell the user to run `/plugin configure ewake@ewake`, or `/plugin configure ewake@synced` if the user added the plugin from claude.ai. Tell the user to enter the MCP address and start a new session. Then stop.
 
    If this exit code is not 0, go to step 4.
-4. Ask the user for the address of their Ewake dashboard, for example `https://your-company.ewake.ai`. The address must start with `https://`. Remove a `/` at the end. The MCP address is the dashboard address plus `/mcp`.
+4. Ask the user for the address of their Ewake dashboard, for example `https://your-company.ewake.ai`. The address must start with `https://`. If the user gives an address without `https://`, add `https://` at the start. Remove a `/` at the end. The MCP address is the dashboard address plus `/mcp`.
 5. Tell the user to sign in to the Ewake dashboard in the browser. Then tell the user what the approval page shows:
    - the name of the coding agent
    - the access "Read your service map, ownership, incident history, deployments and integrations". An older Ewake shows "Read your service map, ownership and incident history".
@@ -79,7 +79,9 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
    claude mcp login ewake
    ```
 
-   If `claude mcp login` does not work, tell the user to run `/mcp`, select **ewake**, and sign in.
+   If `claude mcp login` reports that the URL is not valid, the **ewake** server has a wrong address. Run `claude mcp remove ewake --scope user`. Then run the commands again.
+
+   If `claude mcp login` does not work for a different reason, tell the user to run `/mcp`, select **ewake**, and sign in.
 
    **Codex.** Run these commands:
 
@@ -89,6 +91,8 @@ A tool name can have a prefix, for example `mcp__ewake__ewake_list_service_names
    ```
 
    If the approval page did not open, run `codex mcp login ewake`.
+
+   If Codex reports that the URL of the **ewake** server is not valid, the server has a wrong address. Run `codex mcp remove ewake`. Then run the commands again.
 
    **Cursor.** Do not open `~/.cursor/mcp.json`. Run these commands. They keep the other entries and do not change an existing entry.
 

@@ -52,7 +52,7 @@ The artifact name must be the same as the service name in the observability tool
 Ask the user if their company uses hosted Ewake or self-hosted Ewake.
 
 - **Hosted.** The pipeline sends events to `https://api.ewake.ai`. This is the default.
-- **Self-hosted.** The pipeline sends events to the address of the Ewake instance of the user. The address must start with `https://`. Remove a `/` at the end.
+- **Self-hosted.** The pipeline sends events to the address of the Ewake instance of the user. The address must start with `https://`. If the user gives an address without `https://`, add `https://` at the start. Remove a `/` at the end.
 
 ### 4. Tell the user to create the secret
 

@@ -1,7 +1,7 @@
 {
   "name": "ewake",
   "displayName": "Ewake",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Connects Claude Code to Ewake, an AI on-call agent for production incidents, and to the Ewake documentation. Adds skills that report deployments, map the services of a repository, and check the Ewake setup.",
   "author": {
     "name": "Ewake",

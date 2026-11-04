@@ -1,0 +1,12 @@
+{
+  "name": "ewake",
+  "owner": {
+    "name": "Ewake"
+  },
+  "plugins": [
+    {
+      "name": "ewake",
+      "source": "./"
+    }
+  ]
+}

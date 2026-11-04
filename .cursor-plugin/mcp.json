@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ewake": {
+      "url": "https://${EWAKE_HOST}/mcp"
+    },
+    "ewake-docs": {
+      "url": "https://docs.ewake.ai/mcp"
+    }
+  }
+}

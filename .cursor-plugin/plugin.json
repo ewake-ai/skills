@@ -1,0 +1,37 @@
+{
+  "name": "ewake",
+  "displayName": "Ewake",
+  "version": "0.1.1",
+  "description": "Ask Cursor about production: why an incident started, which team owns a service, what changed before it failed. Ewake answers from your service map, past investigations and deployments. The skills also report deployments and map the services of a repository.",
+  "author": {
+    "name": "Ewake"
+  },
+  "homepage": "https://www.ewake.ai",
+  "repository": "https://github.com/ewake-ai/skills",
+  "license": "MIT",
+  "logo": ".claude-plugin/icon.png",
+  "keywords": [
+    "ewake",
+    "on-call",
+    "incident",
+    "production incident",
+    "service owner",
+    "service map",
+    "deployment tracking",
+    "repo-metadata"
+  ],
+  "variables": {
+    "type": "object",
+    "properties": {
+      "EWAKE_HOST": {
+        "type": "string",
+        "title": "Ewake host",
+        "description": "Enter the host name of your Ewake dashboard, without https:// and without /mcp. Example: your-company.ewake.ai"
+      }
+    },
+    "required": [
+      "EWAKE_HOST"
+    ]
+  },
+  "mcpServers": "./.cursor-plugin/mcp.json"
+}

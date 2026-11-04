@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ewake",
+  "version": "0.1.1",
+  "description": "Ask your coding agent about production: why an incident started, which team owns a service, what changed before it failed. Ewake answers from your service map, past investigations and deployments. The skills connect Ewake, report deployments and map the services of a repository.",
+  "author": {
+    "name": "Ewake",
+    "url": "https://www.ewake.ai"
+  },
+  "homepage": "https://www.ewake.ai",
+  "repository": "https://github.com/ewake-ai/skills",
+  "license": "MIT",
+  "keywords": [
+    "ewake",
+    "on-call",
+    "incident",
+    "production incident",
+    "service owner",
+    "service map",
+    "deployment tracking",
+    "repo-metadata"
+  ]
+}

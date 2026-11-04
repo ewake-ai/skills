@@ -10,7 +10,7 @@ The guide is in the Ewake documentation: [Setup skills for coding agents](https:
 
 Use one install method for each coding agent. If you use two methods in Claude Code, each skill loads two times.
 
-Each plugin has the four skills. The plugins for Claude Code, Cursor, and Gemini CLI also have the two Ewake MCP servers, `ewake` and `ewake-docs`. The plugin for VS Code, GitHub Copilot CLI, and Kiro has only `ewake-docs`. In these agents, you add the `ewake` server by hand. To get its address, ask the agent to "Connect Ewake".
+Each plugin has the four skills. The plugins for Claude Code, Cursor, and Gemini CLI also have the two Ewake MCP servers, `ewake` and `ewake-docs`. The plugin for VS Code, GitHub Copilot CLI, and Kiro has only `ewake-docs`. In these agents, ask the agent to "Connect Ewake". The skill `ewake-connect` adds the `ewake` server.
 
 | Coding agent | The install asks for |
 |---|---|
@@ -35,7 +35,7 @@ Then ask your coding agent, for example:
 - "Teach Ewake about this repository"
 - "Check the Ewake setup"
 
-For Cursor, the connect skill uses `jq` to add the servers. If `jq` is not installed, the skill gives you the entries to add by hand.
+For Cursor and Kiro, the connect skill uses `jq` to change the MCP configuration file. If `jq` is not installed, the skill gives you the entries to add by hand.
 
 ### Claude Code plugin
 
@@ -65,12 +65,13 @@ If you add the plugin from the plugin directory on claude.ai, its name in Claude
 3. Install the plugin **ewake**. Enter your Ewake host.
 4. In **Customize**, sign in to the **ewake** MCP server of the plugin.
 
+To set or change the host, open **Customize** > **Plugins** > **Ewake** and click **Configure**. Enter the host and click **Save**.
+
 ### VS Code
 
 1. In the Command Palette, run **Chat: Install Plugin from Source**.
 2. Enter `https://github.com/ewake-ai/skills`.
-3. Ask the agent to "Connect Ewake". The skill asks for your dashboard address and gives you the two server addresses.
-4. Add the `ewake` server by hand, as the skill tells you.
+3. Ask the agent to "Connect Ewake". The skill asks for your dashboard address and adds the `ewake` server with `code --add-mcp`.
 
 ### GitHub Copilot CLI
 
@@ -79,7 +80,7 @@ copilot plugin marketplace add ewake-ai/skills
 copilot plugin install ewake@ewake
 ```
 
-Then ask Copilot to "Connect Ewake". Add the `ewake` server by hand, as the skill tells you. VS Code also finds the plugins that Copilot CLI installs.
+Then ask Copilot to "Connect Ewake". The skill adds the `ewake` server with `copilot mcp add`. VS Code also finds the plugins that Copilot CLI installs.
 
 ### Gemini CLI
 
@@ -87,7 +88,7 @@ Then ask Copilot to "Connect Ewake". Add the `ewake` server by hand, as the skil
 gemini extensions install https://github.com/ewake-ai/skills
 ```
 
-Gemini CLI asks for your Ewake host. To sign in, run `/mcp auth ewake` in a session. To change the host, run `gemini extensions config ewake`.
+Gemini CLI asks for your Ewake host. To sign in, run `/mcp auth ewake` in a session. To set or change the host, run `gemini extensions config ewake EWAKE_HOST`, then start Gemini CLI again.
 
 ### Kiro
 
@@ -95,7 +96,7 @@ Gemini CLI asks for your Ewake host. To sign in, run `/mcp auth ewake` in a sess
 2. Select **Import power from GitHub**.
 3. Enter `https://github.com/ewake-ai/skills`.
 4. Select **Install**.
-5. Ask Kiro to "Connect Ewake". Add the `ewake` server by hand, as the skill tells you.
+5. Ask Kiro to "Connect Ewake". The skill adds the `ewake` server to `~/.kiro/settings/mcp.json`.
 
 ### MCP Registry
 
@@ -148,9 +149,15 @@ claude mcp get <name>
 claude mcp get plugin:ewake:ewake
 claude mcp get plugin:ewake:ewake-docs && ! claude mcp get ewake
 codex mcp get <name>
+copilot mcp get <name>
+
+# Cursor and Gemini CLI: find the server of the plugin and the host of the extension. The skill uses only the exit code.
+test -d "$(dirname "${AGENT_TRANSCRIPTS:-/nonexistent/x}")/mcps/plugin-ewake-ewake"
+test -d "${GEMINI_CLI_HOME:-$HOME}/.gemini/extensions/ewake"
+grep -Eq '^EWAKE_HOST=.+' "${GEMINI_CLI_HOME:-$HOME}/.gemini/extensions/ewake/.env"
 
 # Claude Code: add the servers to the user configuration, then open the sign-in page.
-claude mcp add --transport http --scope user ewake <MCP address>
+claude mcp add --transport http --scope user ewake '<MCP address>'
 claude mcp add --transport http --scope user ewake-docs https://docs.ewake.ai/mcp
 claude mcp login ewake
 
@@ -162,14 +169,28 @@ codex mcp remove ewake
 # Claude Code with the plugin: add no server. Only open the sign-in page.
 claude mcp login plugin:ewake:ewake
 
+# Cursor with the plugin: add no server. The skill calls the tool mcp_auth of the server plugin-ewake-ewake.
+
 # Codex: add the servers to the Codex configuration, then open the sign-in page.
-codex mcp add ewake --url <MCP address>
+codex mcp add ewake --url '<MCP address>'
 codex mcp add ewake-docs --url https://docs.ewake.ai/mcp
 codex mcp login ewake
 
+# VS Code: add the servers to the user configuration of the default profile. VS Code Insiders uses code-insiders.
+code --add-mcp '{"name":"ewake","type":"http","url":"<MCP address>"}'
+code --add-mcp '{"name":"ewake-docs","type":"http","url":"https://docs.ewake.ai/mcp"}'
+
+# GitHub Copilot CLI: add the servers to the user configuration.
+# If the address of the ewake server is wrong, remove the server, then add it again.
+copilot mcp add --transport http ewake '<MCP address>'
+copilot mcp add --transport http ewake-docs https://docs.ewake.ai/mcp
+copilot mcp remove ewake
+
 # Cursor: merge the two servers into ~/.cursor/mcp.json with jq. The skill keeps the other entries.
-# The full command is in skills/ewake-connect/SKILL.md.
+# Kiro: merge only the ewake server into ~/.kiro/settings/mcp.json with jq. The skill keeps the other entries.
+# The full commands are in skills/ewake-connect/SKILL.md.
 mkdir -p ~/.cursor
+mkdir -p ~/.kiro/settings
 ```
 
 **`ewake-report-deployments`**
